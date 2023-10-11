@@ -2,6 +2,16 @@ from shared.RabbitMQConnector import *
 from server.WeatherAPIConnector import *
 
 
+def expand_file(connection, line):
+    path = "./logs/" + str(connection) + ".txt"
+    try:
+        with open(path, 'a') as datei:
+            datei.write(line + '\n')
+        print(f'Die Zeile "{line}" wurde erfolgreich zur Datei "{path}" hinzugefügt.')
+    except Exception as e:
+        print(f'Fehler beim Hinzufügen der Zeile zur Datei "{path}": {str(e)}')
+
+
 class MessageManager:
     def __init__(self):
         print("Server.init: Start")
@@ -25,4 +35,7 @@ class MessageManager:
         message = self.rabbit.wait_for_message(queue, auto_ack=True)
         if message:
             # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
-            print("Anfrage für " + message + " von " + queue)
+            value = self.weather.call_api()
+            print("Anfrage für " + message + " von " + queue + " mit Wert " + str(value))
+            expand_file(queue, message + str(value))
+
