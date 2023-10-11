@@ -22,7 +22,7 @@ class MessageManager:
             print("Connection established with " + message)
 
     def proceed_client_requests(self, queue):
-        message = self.rabbit.wait_for_message(queue)
+        message = self.rabbit.wait_for_message(queue, auto_ack=True)
         if message:
             # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
             print("Anfrage für " + message + " von " + queue)
