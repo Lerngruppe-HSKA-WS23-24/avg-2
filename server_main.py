@@ -1,8 +1,8 @@
-from WeatherAPIConnector import *
-from shared.RabbitMQConnector import *
+from server.MessageManager import *
 
-weather = WeatherAPIConnector()
-rabbit = RabbitMQConnector("localhost")
+m = MessageManager()
+
 while True:
-    rabbit.create_queue("waitinglist")
-    message = rabbit.wait_for_message("waitinglist")
+    pass
+
+print("Server: finished")
