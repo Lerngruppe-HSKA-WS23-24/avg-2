@@ -12,7 +12,7 @@ class GeocodingConnector:
         time.sleep(1)  # Fügt eine Verzögerung von 1 Sekunde zwischen den Anfragen hinzu
 
         # Generiere eine vollständige Adresse aus den übergebenen Argumenten
-        address_key = f"{street_name} {house_number}, {city}, {country}"
+        address_key = f"{street_name}, {house_number}, {city}, {country}"
 
         # Prüfe, ob die Adresse bereits im Cache ist
         if address_key in cls.address_cache:
