@@ -1,13 +1,9 @@
-from shared.RabbitMQConnector import *
 
-# Hier muss vom Nutzer die Adresse abgefragt werden
-userinput =
+# Einlesen der Daten vom Nutzer
+user_input = input("Land: ") + ";"
 
+user_input += input("Stadt: ") + ";"
+user_input += input("Straße: ") + ";"
+user_input += input("Hausnummer: ")
 
-rabbit = RabbitMQConnector("localhost")
-
-while True:
-
-    daten = "Deutschland:Karlsruhe:Bahnhofsstrasse 4a:0:0"
-    message = rabbit.send_message("waitinglist", daten)
-    response = rabbit.wait_for_message("waitinglist")
+print(user_input)
