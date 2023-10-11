@@ -1,11 +1,6 @@
 import pika
 
 
-def message_callback(method, properties, body):
-    print(body)
-    return body
-
-
 class RabbitMQConnector:
     def __init__(self, address):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(address))
@@ -24,5 +19,5 @@ class RabbitMQConnector:
             self.create_queue(queue_name)
         self.channel.basic_publish(exchange="", routing_key=queue_name, body=message)
 
-    def wait_for_message(self, queue_name):
-        return self.channel.basic_consume(queue=queue_name, on_message_callback=message_callback, auto_ack=True)
+    def wait_for_message(self, queue_name, callback):
+        return self.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
