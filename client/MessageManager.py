@@ -15,3 +15,7 @@ class MessageManager:
         self.rabbit.create_queue(self.queue_name)
         self.rabbit.send_message("waitinglist", self.queue_name)
         print("Synced with server with id " + self.queue_name)
+
+    def send_request(self, message):
+        print("Send message: " + message)
+        self.rabbit.send_message(self.queue_name, message)
