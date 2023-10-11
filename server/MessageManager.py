@@ -37,5 +37,5 @@ class MessageManager:
             # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
             value = self.weather.call_api()
             print("Anfrage für " + message + " von " + queue + " mit Wert " + str(value))
-            expand_file(queue, message + str(value))
+            expand_file(queue, message + " --> " + str(value))
 
