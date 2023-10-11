@@ -7,6 +7,6 @@ m = MessageManager()
 
 while True:
     m.await_new_messages()
-    time.sleep(5)
+    time.sleep(1)
 
 print("Server: finished")
