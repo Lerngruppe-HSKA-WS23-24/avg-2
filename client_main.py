@@ -56,5 +56,5 @@ while True:
 
 m = MessageManager()
 m.sync_with_server()
-m.send_request(user_input)
+m.send_request(daten)
 m.rabbit.connection.close()
