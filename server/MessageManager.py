@@ -35,7 +35,7 @@ class MessageManager:
         message = self.rabbit.wait_for_message(queue, auto_ack=True)
         if message:
             # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
-            value = self.weather.call_api()
-            print("Anfrage für " + message + " von " + queue + " mit Wert " + str(value))
-            expand_file(queue, message + " --> " + str(value))
+            message_contents = message.split(";")
+            solar_data = self.weather.call_api(49.01231012950397, 8.402953221936889, message_contents[4])
+            expand_file(queue, message + " --> " + str(solar_data))
 
