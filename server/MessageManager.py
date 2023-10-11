@@ -1,5 +1,6 @@
 from shared.RabbitMQConnector import *
 from server.WeatherAPIConnector import *
+from server.GeocodingConnector import *
 
 
 def expand_file(connection, line):
@@ -17,6 +18,7 @@ class MessageManager:
         print("Server.init: Start")
         self.rabbit = RabbitMQConnector("localhost")
         self.weather = WeatherAPIConnector()
+        self.geo = GeocodingConnector()
         print("Server.init: Done")
 
     def await_new_messages(self):
