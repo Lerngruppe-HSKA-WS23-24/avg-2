@@ -1,9 +1,53 @@
-
 # Einlesen der Daten vom Nutzer
-user_input = input("Land: ") + ";"
+while True:
 
-user_input += input("Stadt: ") + ";"
-user_input += input("Straße: ") + ";"
-user_input += input("Hausnummer: ")
+    while True:
+        user_input = input("Land: ")
+        if user_input.isalpha():
+            daten = user_input + ";"
+            break
+        else:
+            print("Die Eingabe darf nur Buchstaben enthalten.")
 
-print(user_input)
+    while True:
+        user_input = input("Stadt: ")
+        if user_input.isalpha():
+            daten += user_input + ";"
+            break
+        else:
+            print("Die Eingabe darf nur Buchstaben enthalten.")
+
+    while True:
+        user_input = input("Straße: ")
+        if user_input.isalpha():
+            daten += user_input + ";"
+            break
+        else:
+            print("Die Eingabe darf nur Buchstaben enthalten.")
+
+    while True:
+        user_input = input("Hausnummer: ")
+        if user_input.isdigit():
+            daten += user_input + ";"
+            break
+        else:
+            print("Die Eingabe darf nur Zahlen enthalten.")
+    while True:
+        user_input = input("kWh: ")
+        if user_input.isdigit():
+            daten += user_input
+            break
+        else:
+            print("Die Eingabe darf nur Zahlen enthalten.")
+
+    print(daten)
+
+    user_input = input("Stimmen die Eingaben so? (J/N)")
+
+    if user_input == "J":
+        break
+    if user_input == "N":
+        print("Versuchen sie es nochmal :)")
+
+
+# Eingaben in 'daten' gespeichert print(daten)
