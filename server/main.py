@@ -1,4 +1,7 @@
 import sys
 sys.path.append('../shared')
+from WeatherAPIConnector import *
 
-from RabbitMQConnector import  *
+weather = WeatherAPIConnector()
+while True:
+    pass
