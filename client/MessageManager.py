@@ -14,3 +14,4 @@ class MessageManager:
             self.queue_name = str(uuid.uuid4())
         self.rabbit.create_queue(self.queue_name)
         self.rabbit.send_message("waitinglist", self.queue_name)
+        print("Synced with server with id " + self.queue_name)

@@ -7,18 +7,19 @@ class MessageManager:
         print("Server.init: Start")
         self.rabbit = RabbitMQConnector("localhost")
         self.weather = WeatherAPIConnector()
-        self.rabbit.wait_for_message("waitinglist", self.callback_message_waitinglist)
-        self.waiting = True
         print("Server.init: Done")
 
-    def callback_message_waitinglist(self, method, properties, body):
-        self.rabbit.create_queue(body)
-        self.waiting = False
-        print("Connection established with " + body)
-        self.rabbit.wait_for_message("waitinglist", self.callback_message_waitinglist)
-        self.waiting = True
+    def await_new_messages(self):
+        self.proceed_message_waitinglist()
 
-    def callback_message_requests(self, method, properties, body):
-        indexQueues = 0
-        while indexQueues < self.rabbit.queues:
-            
+    def proceed_message_waitinglist(self):
+        message = self.rabbit.wait_for_message("waitinglist")
+        if message:
+            self.rabbit.create_queue(message)
+            print("Connection established with " + message)
+
+    def proceed_client_requests(self, queue):
+        message = self.rabbit.wait_for_message(queue)
+        if message:
+            # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
+            print("Anfrage für " + message + " von " + queue)
