@@ -14,7 +14,6 @@ class WeatherAPIConnector:
         if self.blocked_until <= datetime.datetime.now():
             response = requests.get(api_url)
 
-            # Wenn der Statuscode 200 (OK) ist, geben Sie die Antwort zurück.
             if response.status_code == 200:
                 return response.json()
 
@@ -22,11 +21,12 @@ class WeatherAPIConnector:
             else:
                 print(f"Received HTTP status code {response.status_code}: {response.text}")
 
+                #Wartezeit bis zum nächsten Versuch speichern
                 zeit_aus_api = response.json().get('message', {}).get('ratelimit', {}).get('retry-at', None)
                 zeit_aus_api = zeit_aus_api.split('+')[0]
-
                 print(f"zeit_aus_api: {zeit_aus_api}")
 
+                #Es muss String zurückkommen, sonst Fehler. Abfrageblockade auf retry-at Zeit einsetzten.
                 if zeit_aus_api and isinstance(zeit_aus_api, str):
                     self.blocked_until = datetime.datetime.fromisoformat(zeit_aus_api)
                     print(self.blocked_until)
