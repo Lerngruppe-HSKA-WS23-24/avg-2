@@ -12,6 +12,9 @@ class MessageManager:
     def await_new_messages(self):
         self.proceed_message_waitinglist()
 
+        for qi in range(len(self.rabbit.queues)):
+            self.proceed_client_requests(self.rabbit.queues[qi])
+
     def proceed_message_waitinglist(self):
         message = self.rabbit.wait_for_message("waitinglist")
         if message:
