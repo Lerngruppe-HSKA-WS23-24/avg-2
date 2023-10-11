@@ -1,8 +1,12 @@
+import time
+
+
 from server.MessageManager import *
 
 m = MessageManager()
 
 while True:
-    pass
+    m.await_new_messages()
+    time.sleep(5)
 
 print("Server: finished")

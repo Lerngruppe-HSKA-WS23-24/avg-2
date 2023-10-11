@@ -1,3 +1,5 @@
+from client.MessageManager import *
+
 # Einlesen der Daten vom Nutzer
 while True:
 
@@ -51,3 +53,8 @@ while True:
 
 
 # Eingaben in 'daten' gespeichert print(daten)
+
+m = MessageManager()
+m.sync_with_server()
+m.send_request(user_input)
+m.rabbit.connection.close()
