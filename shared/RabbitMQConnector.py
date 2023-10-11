@@ -2,8 +2,8 @@ import pika
 
 
 class RabbitMQConnector:
-    def __init__(self):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    def __init__(self, address):
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(address))
         self.channel = self.connection.channel()
         self.queues = []
 
