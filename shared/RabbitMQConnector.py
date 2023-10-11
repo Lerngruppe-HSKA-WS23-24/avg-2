@@ -2,6 +2,7 @@ import pika
 
 
 def message_callback(method, properties, body):
+    print(body)
     return body
 
 
