@@ -31,6 +31,6 @@ class MessageManager:
             self.rabbit.acknowledge_message(method_frame.delivery_tag)
             data = json.loads(sender_message[1])
             try:
-                return data.result.watts
+                return data.result
             except Exception as e:
                 print("Fehler: " + str(e))
