@@ -1,34 +1,39 @@
 from client.MessageManager import *
 
-
 m = MessageManager()
 m.sync_with_server()
+
+
+def check_input(s):
+    return bool(s) and all(char.isalpha() or char.isspace() for char in s)
+
+
 while True:
     # Einlesen der Daten vom Nutzer
     while True:
         while True:
             user_input = input("Land: ")
-            if user_input.isalpha():
+            if check_input(user_input):
                 daten = user_input + ";"
                 break
             else:
-                print("Die Eingabe darf nur Buchstaben enthalten.")
+                print("Die Eingabe darf nur Buchstaben und Leerzeichen enthalten.")
 
         while True:
             user_input = input("Stadt: ")
-            if user_input.isalpha():
+            if check_input(user_input):
                 daten += user_input + ";"
                 break
             else:
-                print("Die Eingabe darf nur Buchstaben enthalten.")
+                print("Die Eingabe darf nur Buchstaben und Leerzeichen enthalten.")
 
         while True:
             user_input = input("Straße: ")
-            if user_input.isalpha():
+            if check_input(user_input):
                 daten += user_input + ";"
                 break
             else:
-                print("Die Eingabe darf nur Buchstaben enthalten.")
+                print("Die Eingabe darf nur Buchstaben und Leerzeichen enthalten.")
 
         while True:
             user_input = input("Hausnummer: ")
@@ -54,8 +59,7 @@ while True:
         if user_input == "N":
             print("Versuchen sie es nochmal :)")
 
-
-    # Eingaben in 'daten' gespeichert print(daten)
+    # Eingaben in daten gespeichert
     m.send_request(daten)
 
 m.rabbit.connection.close()
