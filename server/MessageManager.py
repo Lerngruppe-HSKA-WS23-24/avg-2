@@ -8,7 +8,7 @@ def expand_file(connection, line):
     try:
         with open(path, 'a') as datei:
             datei.write(line + '\n')
-        print(f'Die Zeile "{line}" wurde erfolgreich zur Datei "{path}" hinzugefügt.')
+        print(f'Die Log-Datei "{path}" wurde bearbeitet.')
     except Exception as e:
         print(f'Fehler beim Hinzufügen der Zeile zur Datei "{path}": {str(e)}')
 
@@ -17,6 +17,7 @@ class MessageManager:
     def __init__(self):
         print("Server.init: Start")
         self.rabbit = RabbitMQConnector("localhost")
+        self.rabbit.create_queue("waitinglist")
         self.weather = WeatherAPIConnector()
         self.geo = GeocodingConnector()
         print("Server.init: Done")
@@ -38,7 +39,8 @@ class MessageManager:
         if message:
             # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
             message_contents = message.split(";")
-            geo_data = self.geo.get_coordinates_from_address(message_contents[0], message_contents[1], message_contents[2], message_contents[3])
-            solar_data = self.weather.call_api(geo_data[0], geo_data[1], message_contents[4])
-            expand_file(queue, message + " --> " + str(solar_data))
-            self.rabbit.send_message(queue, str(geo_data))
+            if isinstance(message_contents, list) and len(message_contents) >= 4:
+                geo_data = self.geo.get_coordinates_from_address(message_contents[0], message_contents[1], message_contents[2], message_contents[3])
+                solar_data = self.weather.call_api(geo_data[0], geo_data[1], message_contents[4])
+                expand_file(queue, message + " --> " + str(solar_data))
+                self.rabbit.send_message(queue, str(geo_data))
