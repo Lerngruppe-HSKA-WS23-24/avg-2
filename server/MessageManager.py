@@ -38,7 +38,7 @@ class MessageManager:
         message, method_frame = self.rabbit.wait_for_message(queue, auto_ack=False)
         if message:
             # Anfrage verarbeiten mit Call an WeatherAPI und senden an Channel
-            sender_message = message.split(":")
+            sender_message = message.split("/")
             if sender_message[0] == "client":
                 self.rabbit.acknowledge_message(method_frame.delivery_tag)
                 message_contents = sender_message[1].split(";")
@@ -46,4 +46,4 @@ class MessageManager:
                     geo_data = self.geo.get_coordinates_from_address(message_contents[0], message_contents[1], message_contents[2], message_contents[3])
                     solar_data = self.weather.call_api(geo_data[0], geo_data[1], message_contents[4])
                     expand_file(queue, message + " --> " + str(solar_data))
-                    self.rabbit.send_message(queue, "server:" + str(solar_data))
+                    self.rabbit.send_message(queue, "server/" + str(solar_data))
