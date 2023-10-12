@@ -2,6 +2,7 @@ from shared.RabbitMQConnector import *
 
 import uuid
 import json
+import time
 
 
 class MessageManager:
@@ -22,15 +23,18 @@ class MessageManager:
         self.rabbit.send_message(self.queue_name, "client:" + message)
 
     def await_response(self):
-        message, method_frame = None, None
-        while not (message and method_frame):
+        while True:
+            time.sleep(1)
             message, method_frame = self.rabbit.wait_for_message(self.queue_name, auto_ack=False)
-
+            if message:
+                sender_check = message.split(":")
+                if sender_check[0] == "server":
+                    break
         sender_message = message.split(":")
-        if sender_message[0] == "server":
-            self.rabbit.acknowledge_message(method_frame.delivery_tag)
-            data = json.loads(sender_message[1])
-            try:
-                return data.result
-            except Exception as e:
-                print("Fehler: " + str(e))
+        self.rabbit.acknowledge_message(method_frame.delivery_tag)
+        data = json.loads(sender_message[1])
+        print(data)
+        try:
+            return data.result
+        except Exception as e:
+            print("Fehler: " + str(e))

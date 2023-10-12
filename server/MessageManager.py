@@ -46,4 +46,4 @@ class MessageManager:
                     geo_data = self.geo.get_coordinates_from_address(message_contents[0], message_contents[1], message_contents[2], message_contents[3])
                     solar_data = self.weather.call_api(geo_data[0], geo_data[1], message_contents[4])
                     expand_file(queue, message + " --> " + str(solar_data))
-                    self.rabbit.send_message(queue, "server:" + str(geo_data))
+                    self.rabbit.send_message(queue, "server:" + str(solar_data))
