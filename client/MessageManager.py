@@ -22,13 +22,15 @@ class MessageManager:
         self.rabbit.send_message(self.queue_name, "client:" + message)
 
     def await_response(self):
-        message, method_frame = self.rabbit.wait_for_message(self.queue_name, auto_ack=False)
-        if message and method_frame:
-            sender_message = message.split(":")
-            if sender_message[0] == "server":
-                self.rabbit.acknowledge_message(method_frame.delivery_tag)
-                data = json.loads(sender_message[1])
-                try:
-                    return data.result.watts
-                except Exception as e:
-                    print("Fehler: " + str(e))
+        message, method_frame = None, None
+        while not (message and method_frame):
+            message, method_frame = self.rabbit.wait_for_message(self.queue_name, auto_ack=False)
+
+        sender_message = message.split(":")
+        if sender_message[0] == "server":
+            self.rabbit.acknowledge_message(method_frame.delivery_tag)
+            data = json.loads(sender_message[1])
+            try:
+                return data.result.watts
+            except Exception as e:
+                print("Fehler: " + str(e))
