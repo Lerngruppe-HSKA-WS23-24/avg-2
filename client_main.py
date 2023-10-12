@@ -1,13 +1,73 @@
-from shared.RabbitMQConnector import *
+from client.MessageManager import *
 
-# Hier muss vom Nutzer die Adresse abgefragt werden
-userinput =
+m = MessageManager()
+m.sync_with_server()
 
 
-rabbit = RabbitMQConnector("localhost")
+def check_input(s):
+    return bool(s) and all(char.isalpha() or char.isspace() for char in s)
+
 
 while True:
+    # Einlesen der Daten vom Nutzer
+    while True:
+        while True:
+            user_input = input("Land: ")
+            if check_input(user_input):
+                daten = user_input + ";"
+                break
+            else:
+                print("Die Eingabe darf nur Buchstaben und Leerzeichen enthalten.")
 
-    daten = "Deutschland:Karlsruhe:Bahnhofsstrasse 4a:0:0"
-    message = rabbit.send_message("waitinglist", daten)
-    response = rabbit.wait_for_message("waitinglist")
+        while True:
+            user_input = input("Stadt: ")
+            if check_input(user_input):
+                daten += user_input + ";"
+                break
+            else:
+                print("Die Eingabe darf nur Buchstaben und Leerzeichen enthalten.")
+
+        while True:
+            user_input = input("Straße: ")
+            if check_input(user_input):
+                daten += user_input + ";"
+                break
+            else:
+                print("Die Eingabe darf nur Buchstaben und Leerzeichen enthalten.")
+
+        while True:
+            user_input = input("Hausnummer: ")
+            if user_input.isdigit():
+                daten += user_input + ";"
+                break
+            else:
+                print("Die Eingabe darf nur Zahlen enthalten.")
+        while True:
+            user_input = input("kWh: ")
+            if user_input.isdigit():
+                daten += user_input
+                break
+            else:
+                print("Die Eingabe darf nur Zahlen enthalten.")
+
+        print(daten)
+
+        user_input = input("Stimmen die Eingaben so? (J/N)")
+
+        if user_input == "J":
+            break
+        if user_input == "N":
+            print("Versuchen sie es nochmal :)")
+
+    # Eingaben in daten gespeichert
+    m.send_request(daten)
+    data = m.await_response()
+    if data:
+        for key in data.keys():
+            print(key)
+            for hourKey in data[key]:
+                print(hourKey + ": " + str(data[key][hourKey]))
+    else:
+        print("Solar API erhält keine Daten")
+
+m.rabbit.connection.close()

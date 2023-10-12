@@ -36,7 +36,7 @@ class GeocodingConnector:
         street_name = cls.format_input(street_name)
 
         # Generiere eine vollständige Adresse aus den übergebenen Argumenten
-        address_key = f"{street_name} {house_number}, {city}, {country}"
+        address_key = f"{street_name}, {house_number}, {city}, {country}"
 
         # Prüfe, ob die Adresse bereits im Cache ist
         if address_key in cls.address_cache:
