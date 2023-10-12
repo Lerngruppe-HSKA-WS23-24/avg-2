@@ -1,22 +1,26 @@
 import time
 from geopy.geocoders import Nominatim
+from dataclasses import dataclass
+from functools import lru_cache
+
+
+@dataclass
+class Address:
+    country: str
+    city: str
+    street_name: str
+    house_number: str
 
 
 class GeocodingConnector:
-    # Initialisiere einen Cache für Adressen und Koordinaten
-    address_cache = {}
-    coord_cache = {}
 
     @classmethod
-    def get_coordinates_from_address(cls, country, city, street_name, house_number):
+    @lru_cache(maxsize=512)
+    def get_coordinates_from_address(cls, country: str, city: str, street_name: str, house_number: str):
         time.sleep(1)  # Fügt eine Verzögerung von 1 Sekunde zwischen den Anfragen hinzu
 
         # Generiere eine vollständige Adresse aus den übergebenen Argumenten
         address_key = f"{street_name}, {house_number}, {city}, {country}"
-
-        # Prüfe, ob die Adresse bereits im Cache ist
-        if address_key in cls.address_cache:
-            return cls.address_cache[address_key]
 
         geolocator = Nominatim(user_agent="solar_production_server")
         location = geolocator.geocode(address_key)
@@ -25,22 +29,12 @@ class GeocodingConnector:
             raise ValueError("Adresse konnte nicht in Koordinaten umgewandelt werden")
 
         coords = (location.latitude, location.longitude)
-
-        # Speichere die Koordinaten im Cache
-        cls.address_cache[address_key] = coords
-
         return coords
 
     @classmethod
-    def get_address_from_coordinates(cls, latitude, longitude):
+    @lru_cache(maxsize=512)
+    def get_address_from_coordinates(cls, latitude: float, longitude: float):
         time.sleep(1)  # Fügt eine Verzögerung von 1 Sekunde zwischen den Anfragen hinzu
-
-        # Generiere einen eindeutigen Schlüssel für diese Koordinaten
-        coord_key = f"{latitude},{longitude}"
-
-        # Prüfe, ob die Koordinaten bereits im Cache sind
-        if coord_key in cls.coord_cache:
-            return cls.coord_cache[coord_key]
 
         geolocator = Nominatim(user_agent="solar_production_server_reverse")
         location = geolocator.reverse((latitude, longitude), exactly_one=True)
@@ -49,8 +43,4 @@ class GeocodingConnector:
             raise ValueError("Koordinaten konnten nicht in eine Adresse umgewandelt werden")
 
         address = location.address
-
-        # Speichere die Adresse im Cache
-        cls.coord_cache[coord_key] = address
-
         return address
