@@ -1,4 +1,4 @@
-import time
+from functools import lru_cache
 from geopy.geocoders import Nominatim
 
 
@@ -8,8 +8,32 @@ class GeocodingConnector:
     coord_cache = {}
 
     @classmethod
+    def format_input(cls, input_str: str) -> str:
+        # Umlaute und andere Sonderzeichen ersetzen
+        replacements = {
+            'ä': 'a',
+            'ö': 'o',
+            'ü': 'u',
+            'Ä': 'A',
+            'Ö': 'O',
+            'Ü': 'U',
+            'Str.': 'Straße',
+            'str.': 'Straße'
+        }
+
+        for old, new in replacements.items():
+            input_str = input_str.replace(old, new)
+
+        # Erster Buchstabe groß, der Rest klein
+        return input_str.capitalize()
+
+
+    @classmethod
+    @lru_cache(maxsize=256)
     def get_coordinates_from_address(cls, country, city, street_name, house_number):
-        time.sleep(1)  # Fügt eine Verzögerung von 1 Sekunde zwischen den Anfragen hinzu
+        country = cls.format_input(country)
+        city = cls.format_input(city)
+        street_name = cls.format_input(street_name)
 
         # Generiere eine vollständige Adresse aus den übergebenen Argumenten
         address_key = f"{street_name}, {house_number}, {city}, {country}"
@@ -32,9 +56,8 @@ class GeocodingConnector:
         return coords
 
     @classmethod
+    @lru_cache(maxsize=256)
     def get_address_from_coordinates(cls, latitude, longitude):
-        time.sleep(1)  # Fügt eine Verzögerung von 1 Sekunde zwischen den Anfragen hinzu
-
         # Generiere einen eindeutigen Schlüssel für diese Koordinaten
         coord_key = f"{latitude},{longitude}"
 
