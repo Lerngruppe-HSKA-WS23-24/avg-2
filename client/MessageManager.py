@@ -32,8 +32,10 @@ class MessageManager:
                     break
         sender_message = message.split(":")
         self.rabbit.acknowledge_message(method_frame.delivery_tag)
-        data = json.loads(sender_message[1])
-        print(data)
+        try:
+            data = json.loads(sender_message[1])
+        except json.decoder.JSONDecodeError:
+            return None
         try:
             return data.result
         except Exception as e:

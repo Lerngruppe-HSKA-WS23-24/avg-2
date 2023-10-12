@@ -62,10 +62,12 @@ while True:
     # Eingaben in daten gespeichert
     m.send_request(daten)
     data = m.await_response()
-    print(data)
-    for key in data.keys():
-        print(key)
-        for hourKey in data[key]:
-            print(hourKey + ": " + str(data[key][hourKey]))
+    if data:
+        for key in data.keys():
+            print(key)
+            for hourKey in data[key]:
+                print(hourKey + ": " + str(data[key][hourKey]))
+    else:
+        print("Solar API erhält keine Daten")
 
 m.rabbit.connection.close()
