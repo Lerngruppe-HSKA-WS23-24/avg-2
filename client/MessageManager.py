@@ -20,22 +20,21 @@ class MessageManager:
 
     def send_request(self, message):
         print("Send message: " + message)
-        self.rabbit.send_message(self.queue_name, "client/" + message)
+        self.rabbit.send_message(self.queue_name, "client$" + message)
 
     def await_response(self):
         while True:
             time.sleep(1)
             message, method_frame = self.rabbit.wait_for_message(self.queue_name, auto_ack=False)
             if message:
-                sender_check = message.split("/")
+                sender_check = message.split("$")
                 if sender_check[0] == "server":
                     break
-        sender_message = message.split("/")
+        sender_message = message.split("$")
         self.rabbit.acknowledge_message(method_frame.delivery_tag)
-        print(sender_message[1].replace("\'", "\"")) 
         try:
             data = json.loads(sender_message[1].replace("\'", "\""))
         except json.decoder.JSONDecodeError:
             return None
 
-        return data.result
+        return data["result"]

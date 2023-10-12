@@ -62,7 +62,6 @@ while True:
     # Eingaben in daten gespeichert
     m.send_request(daten)
     data = m.await_response()
-    print(data)
     if data:
         for key in data.keys():
             print(key)
