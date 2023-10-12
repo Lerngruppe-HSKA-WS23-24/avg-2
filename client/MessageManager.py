@@ -18,4 +18,4 @@ class MessageManager:
 
     def send_request(self, message):
         print("Send message: " + message)
-        self.rabbit.send_message(self.queue_name, message)
+        self.rabbit.send_message(self.queue_name, "client:" + message)

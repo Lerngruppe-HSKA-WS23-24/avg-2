@@ -23,6 +23,14 @@ class RabbitMQConnector:
         method_frame, header_frame, body = self.channel.basic_get(queue=queue_name, auto_ack=auto_ack)
         if method_frame:
             message = body.decode('utf-8')
-            return message
+            return message, method_frame
         else:
-            return None
+            return None, None
+
+    def acknowledge_message(self, delivery_tag):
+        """
+        Bestätigt die Verarbeitung einer Nachricht mit einem Ack.
+
+        :param delivery_tag: Die Lieferkennung (delivery tag) der Nachricht, die bestätigt werden soll.
+        """
+        self.channel.basic_ack(delivery_tag=delivery_tag)
