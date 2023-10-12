@@ -61,5 +61,10 @@ while True:
 
     # Eingaben in daten gespeichert
     m.send_request(daten)
+    data = m.await_response()
+    for key in data.keys():
+        print(key)
+        for hourKey in data[key]:
+            print(hourKey + ": " + str(data[key][hourKey]))
 
 m.rabbit.connection.close()
