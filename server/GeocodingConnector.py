@@ -3,12 +3,21 @@ from geopy.geocoders import Nominatim
 
 
 class GeocodingConnector:
+    """
+    Ein Konnektor zum Umwandeln von Adressen in Koordinaten und umgekehrt mithilfe des Nominatim Geocoding-Dienstes.
+    """
     # Initialisiere einen Cache für Adressen und Koordinaten
     address_cache = {}
     coord_cache = {}
 
     @classmethod
     def format_input(cls, input_str: str) -> str:
+        """
+        Formatiert eine Eingabezeichenfolge, indem Umlaute und andere Sonderzeichen ersetzt werden.
+
+        :param input_str: Die Zeichenfolge, die formatiert werden soll.
+        :return: Die formatierte Zeichenfolge.
+        """
         # Umlaute und andere Sonderzeichen ersetzen
         replacements = {
             'ä': 'a',
@@ -27,10 +36,19 @@ class GeocodingConnector:
         # Erster Buchstabe groß, der Rest klein
         return input_str.capitalize()
 
-
     @classmethod
     @lru_cache(maxsize=256)
     def get_coordinates_from_address(cls, country, city, street_name, house_number):
+        """
+        Wandelt eine Adresse in geografische Koordinaten um.
+
+        :param country: Das Land.
+        :param city: Die Stadt.
+        :param street_name: Der Straßenname.
+        :param house_number: Die Hausnummer.
+
+        :return: Ein Tupel mit (Breitengrad, Längengrad) oder None, wenn die Adresse nicht gefunden wird.
+        """
         country = cls.format_input(country)
         city = cls.format_input(city)
         street_name = cls.format_input(street_name)
@@ -58,6 +76,14 @@ class GeocodingConnector:
     @classmethod
     @lru_cache(maxsize=256)
     def get_address_from_coordinates(cls, latitude, longitude):
+        """
+        Wandelt geografische Koordinaten in eine physische Adresse um.
+
+        :param latitude: Der Breitengrad.
+        :param longitude: Der Längengrad.
+
+        :return: Die physische Adresse oder None, wenn keine Adresse für die Koordinaten gefunden wird.
+        """
         # Generiere einen eindeutigen Schlüssel für diese Koordinaten
         coord_key = f"{latitude},{longitude}"
 
