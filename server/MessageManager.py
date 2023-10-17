@@ -17,6 +17,7 @@ def expand_file(connection, line):
     except Exception as e:
         print(f'Fehler beim Hinzufügen der Zeile zur Datei "{path}": {str(e)}')
 
+
 class MessageManager:
     """
     Ein Manager zum Behandeln von Nachrichten zwischen Clients und Servern mit RabbitMQ, WetterAPI und Geocoding.
